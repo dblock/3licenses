@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="AntTasks" basedir="." default="build">
 	<target name="recurse">
+		<ant dir="version" target="${ant.target}" />
 		<ant dir="ant" target="${ant.target}" />
 		<ant dir="artifacts" target="${ant.target}" />
 	</target>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="3licenses" default="build" basedir=".">
-    <property name="3licenses.version" value="1.0" />
-    <property name="3licenses.copyright" value="Application Security, Inc." />
-    <property name="3licenses.root" value="${basedir}" />
-    <property name="3licenses.build" value="${3licenses.root}/build" />
-    <property name="3licenses.doc" value="${3licenses.root}/doc" />
-    <property name="3licenses.bin" value="${3licenses.root}/bin" />
-    <property name="3licenses.lib" value="${3licenses.root}/lib" />
-    <property name="3licenses.src" value="${3licenses.root}/src" />
-    <property name="3licenses.test.src" value="${3licenses.root}/src-test" />
-    <property name="3licenses.test.lib" value="${3licenses.root}/lib-test" />
-    <property name="externals.dir" location="${basedir}/../externals" />
+<project name="Ant" default="build" basedir=".">
+	<property name="build.root" location="${basedir}/.." />
+	<property file="${build.root}/version/build/project.properties" />
+    <property name="3licenses.build" value="${basedir}/build" />
+    <property name="3licenses.doc" value="${basedir}/doc" />
+    <property name="3licenses.bin" value="${basedir}/bin" />
+    <property name="3licenses.lib" value="${basedir}/lib" />
+    <property name="3licenses.src" value="${basedir}/src" />
+    <property name="3licenses.test.src" value="${basedir}/src-test" />
+    <property name="3licenses.test.lib" value="${basedir}/lib-test" />
+    <property name="externals.dir" location="${build.root}/externals" />
     <path id="ant.classpath">
         <fileset dir="${externals.dir}/ant/lib">
             <include name="ant.jar" />
@@ -59,8 +58,8 @@
             	<include name="**/*.properties" />
             </fileset>
             <manifest>
-                <attribute name="Version" value="${3licenses.version}" />
-                <attribute name="Created-By" value="${3licenses.copyright}" />
+                <attribute name="Version" value="${version}" />
+                <attribute name="Created-By" value="${copyright}" />
             </manifest>
         </jar>
         <jar jarfile="${3licenses.build}/3licenses-src.zip">
@@ -68,8 +67,8 @@
                 <include name="**/*.java" />
             </fileset>
             <manifest>
-                <attribute name="Version" value="${3licenses.version}" />
-                <attribute name="Created-By" value="${3licenses.copyright}" />
+                <attribute name="Version" value="${version}" />
+                <attribute name="Created-By" value="${copyright}" />
             </manifest>
         </jar>
     	<copy todir="${3licenses.build}" file="${3licenses.src}/manifest.xsl" />
