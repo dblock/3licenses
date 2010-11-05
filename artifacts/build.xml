@@ -40,6 +40,11 @@
 			<fileset dir="${3licenses-ant.dir}" includes="*/**" />
 		</copy>
 		<copy tofile="${artifacts.build.dir}/license.html" file="epl-v10.html" overwrite="true" />
+		<copy tofile="${artifacts.build.dir}/whatsnew.html" file="whatsnew.html" overwrite="true">
+			<filterchain>
+				<expandproperties />
+			</filterchain>
+		</copy>
 		<antcall target="gather-licenses" />
 		<antcall target="zip-artifacts" />
 		<echo message="================ Done: ${version} ================" />
