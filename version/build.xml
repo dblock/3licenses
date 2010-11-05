@@ -37,10 +37,7 @@
 	</target>
 
 	<target name="clean" depends="delete-svn-properties-file">
-		<delete dir="${project.build.root}" />
-		<antcall target="all-projects">
-			<param name="target" value="clean" />
-		</antcall>
+		<delete dir="${build.dir}" />
 	</target>
 
 	<target name="build" depends="init-new-build">

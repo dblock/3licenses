@@ -8,8 +8,8 @@
 	<property name="build.root" location="${basedir}/.." />
 	<property file="${build.root}/version/build/project.properties" />
 	<property name="externals.dir" location="${basedir}/../externals" />
-	<property name="artifacts.dir" location="${basedir}/build" />
-	<property name="artifacts.build.dir" location="${artifacts.dir}/3licenses" />
+	<property name="build.dir" location="${basedir}/build" />
+	<property name="artifacts.build.dir" location="${build.dir}/3licenses" />
 	<property name="dist.dir" location="${build.root}/dist" />
 	<property name="3licenses-ant.dir" location="${build.root}/ant/build" />
 	<property name="3licenses-ant-doc.dir" location="${build.root}/ant/doc" />
@@ -46,14 +46,14 @@
 	</target>
 	<target name="zip-artifacts">
         <mkdir dir="${dist.dir}" />
-		<zip basedir="${artifacts.dir}" destfile="${dist.dir}/3licenses-${version.major.minor}.zip" />
+		<zip basedir="${build.dir}" destfile="${dist.dir}/3licenses-${version.major.minor}.zip" />
         </target>
 	<target name="clean">
 		<tstamp>
 			<format property="top.clean.time" pattern="hh:mm:ss" />
 		</tstamp>
 		<echo message="================ ${top.clean.time}: Cleaning Up ================" />
-		<delete dir="${artifacts.build.dir}" quiet="true" />
+		<delete dir="${build.dir}" quiet="true" />
                 <delete dir="${dist.dir}" quiet="true" />
 	</target>
 	<target name="build" depends="gather-artifacts" />
