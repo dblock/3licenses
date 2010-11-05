@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="3licenses" default="build" basedir=".">
+    <property name="3licenses.version" value="1.0" />
+    <property name="3licenses.copyright" value="Application Security, Inc." />
+    <property name="3licenses.root" value="${basedir}" />
+    <property name="3licenses.build" value="${3licenses.root}/build" />
+    <property name="3licenses.doc" value="${3licenses.root}/doc" />
+    <property name="3licenses.bin" value="${3licenses.root}/bin" />
+    <property name="3licenses.lib" value="${3licenses.root}/lib" />
+    <property name="3licenses.src" value="${3licenses.root}/src" />
+    <property name="3licenses.test.src" value="${3licenses.root}/src-test" />
+    <property name="3licenses.test.lib" value="${3licenses.root}/lib-test" />
+    <property name="externals.dir" location="${basedir}/../externals" />
+    <path id="ant.classpath">
+        <fileset dir="${externals.dir}/ant/lib">
+            <include name="ant.jar" />
+        </fileset>
+        <fileset dir="${externals.dir}/svnkit">
+            <include name="svnkit.jar" />
+        	<include name="svnkit-cli.jar" />
+        </fileset>
+    </path>
+    <path id="3licenses.classpath">       
+        <path refid="ant.classpath" />    
+    </path>
+    <path id="3licenses.test.classpath">
+        <fileset dir="${3licenses.build}">
+            <include name="3licenses-ant.jar" />
+        </fileset>
+        <path refid="3licenses.classpath" />      
+        <fileset dir="${externals.dir}/junit">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement location="${3licenses.test.lib}" />
+    </path>
+    <target name="compile">
+        <mkdir dir="${3licenses.lib}" />
+        <javac srcdir="${3licenses.src}"  destdir="${3licenses.lib}" optimize="on">
+            <classpath refid="3licenses.classpath" />
+            <include name="**/*.java" />
+        </javac>
+    </target>
+    <target name="compile-tests">
+        <mkdir dir="${3licenses.test.lib}" />
+        <javac srcdir="${3licenses.test.src}"  destdir="${3licenses.test.lib}">
+            <classpath refid="3licenses.test.classpath" />
+            <include name="**/*.java" />
+        </javac>
+    </target>
+    <target name="jar" depends="compile">
+        <delete dir="${3licenses.build}" />
+        <mkdir dir="${3licenses.build}" />
+        <jar jarfile="${3licenses.build}/3licenses.jar">
+            <fileset dir="${3licenses.lib}">
+                <include name="**/*.class" />
+            </fileset>
+            <fileset dir="${3licenses.src}">
+                <include name="**/*.xml" />
+            	<include name="**/*.properties" />
+            </fileset>
+            <manifest>
+                <attribute name="Version" value="${3licenses.version}" />
+                <attribute name="Created-By" value="${3licenses.copyright}" />
+            </manifest>
+        </jar>
+        <jar jarfile="${3licenses.build}/3licenses-src.zip">
+            <fileset dir="${3licenses.src}">
+                <include name="**/*.java" />
+            </fileset>
+            <manifest>
+                <attribute name="Version" value="${3licenses.version}" />
+                <attribute name="Created-By" value="${3licenses.copyright}" />
+            </manifest>
+        </jar>
+    	<copy todir="${3licenses.build}" file="${3licenses.src}/manifest.xsl" />
+    </target>
+    <target name="test" depends="jar,compile-tests">
+        <junit fork="true" newenvironment="true" failureproperty="tests.failed" 
+            printsummary="on" outputtoformatters="false">
+            <classpath refid="3licenses.test.classpath" />
+            <batchtest>
+                <fileset dir="${3licenses.test.lib}" includes="**/*Tests.class" />
+            </batchtest>
+        </junit>
+        <fail message="Unit Tests failed" if="tests.failed" />
+    </target>
+    <target name="doc">
+        <javadoc destdir="${3licenses.doc}" sourcepath="${3licenses.src}" 
+            classpathref="3licenses.classpath" />
+    </target>
+    <target name="clean">
+        <delete dir="${3licenses.bin}" />
+        <delete dir="${3licenses.build}" />
+        <delete dir="${3licenses.lib}" />
+        <delete dir="${3licenses.test.lib}" />
+        <delete dir="${3licenses.doc}" />
+    </target>
+    <target name="build" depends="jar,test,doc" />
+    <target name="clean-build" depends="clean,build" />
+</project>

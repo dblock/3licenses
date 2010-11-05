@@ -1,0 +1,50 @@
+<project name="Artifacts" basedir="." default="build">
+	<property name="build.root" location="${basedir}/.." />
+	<property name="externals.dir" location="${basedir}/../externals" />
+	<property name="artifacts.build.dir" location="${basedir}/build" />
+	<property name="3licenses-ant.dir" location="${build.root}/ant/build" />
+	<property name="3licenses-ant-doc.dir" location="${build.root}/ant/doc" />
+	<path id="3licenses-ant.classpath">
+		<fileset dir="${3licenses-ant.dir}">
+			<include name="3licenses.jar" />
+		</fileset>
+		<fileset dir="${externals.dir}/svnkit">
+			<include name="svnkit.jar" />
+			<include name="svnkit-cli.jar" />
+		</fileset>
+	</path>
+	<target name="gather-licenses">
+		<taskdef resource="com/appsecinc/ant/3licenses.properties" classpathref="3licenses-ant.classpath" />
+		<collect-licenses src="${build.root}/externals" todir="${artifacts.build.dir}/licenses" xslfile="${3licenses-ant.dir}/manifest.xsl">
+			<externals>
+				<external src="junit" include="false" />
+				<external src="ant" name="Apache ANT" license="Apache License 2.0" url="http://ant.apache.org/" />
+				<external src="svnkit" name="Subversion Java Kit" license="TMate Open Source License" url="http://svnkit.com/" />
+				<external src="jna" name="Java Native Access" url="http://jna.dev.java.org/" />
+			</externals>
+		</collect-licenses>
+	</target>
+	<target name="gather-artifacts">
+		<mkdir dir="${artifacts.build.dir}" />
+		<delete>
+			<fileset dir="${artifacts.build.dir}" includes="**/*" />
+		</delete>
+		<copy todir="${artifacts.build.dir}" overwrite="true">
+			<fileset dir="${3licenses-ant.dir}" includes="*/**" />
+		</copy>
+		<antcall target="gather-licenses" />
+		<echo message="================ Done: ${artifacts.build.dir} ================" />
+	</target>
+	<target name="clean">
+		<tstamp>
+			<format property="top.clean.time" pattern="hh:mm:ss" />
+		</tstamp>
+		<echo message="================ ${top.clean.time}: Cleaning Up ================" />
+		<delete dir="${artifacts.build.dir}" quiet="true" />
+	</target>
+	<target name="build" depends="gather-artifacts" />
+	<target name="clean-build" depends="clean, build" />
+	<target name="test">
+		<echo message="Project ${ant.project.name} doesn't have any tests" />
+	</target>
+</project>
