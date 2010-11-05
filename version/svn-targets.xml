@@ -1,22 +1,9 @@
-<!--
-================================================================================
-This file provides the following targets:
-
-    get-svn-properties   - sets the following properies for the source tree:
-                             svn.branch   - e.g. trunk
-                             svn.revision - latest revision in repository
-    
-    save-svn-properties  - save svn.brunch and svn.revision properties into
-                           a file ${svn.properties.file}
-    
-    update-svn-properties-file - get-svn-properties + save-svn-properties  
-    
-Required variables:
-
-    svn.properties.file  - full path to svn properties file (for save-svn-properties)
-================================================================================
--->
-
+<!-- 
+ Copyright (c) Application Security Inc., 2010
+ All Rights Reserved
+ Eclipse Public License (EPLv1)
+ http://3licenses.codeplex.com/license
+ -->
 <project name="svn-targets">
 	<property name="svn.cmd" value="svn.exe" />	
 	<target name="get-svn-properties" unless="svn.revision">	

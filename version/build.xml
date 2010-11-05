@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+ Copyright (c) Application Security Inc., 2010
+ All Rights Reserved
+ Eclipse Public License (EPLv1)
+ http://3licenses.codeplex.com/license
+ -->
 <project name="Version" basedir="." default="build">	
 	<dirname property="sourcetree.root" file="${basedir}" />	
 	<property name="svn.properties.file" location="${basedir}/svn-derived.properties" />

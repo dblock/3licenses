@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ Copyright (c) Application Security Inc., 2010
+ All Rights Reserved
+ Eclipse Public License (EPLv1)
+ http://3licenses.codeplex.com/license
+ -->
 <html xsl:version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <style type="text/css">
