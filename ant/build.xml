@@ -17,7 +17,7 @@
         </fileset>
         <fileset dir="${externals.dir}/svnkit">
             <include name="svnkit.jar" />
-        	<include name="svnkit-cli.jar" />
+            <include name="svnkit-cli.jar" />
         </fileset>
     </path>
     <path id="3licenses.classpath">       
@@ -73,6 +73,12 @@
             </manifest>
         </jar>
     	<copy todir="${3licenses.build}" file="${3licenses.src}/manifest.xsl" />
+        <copy todir="${3licenses.build}">
+            <fileset dir="${externals.dir}/svnkit">
+                <include name="svnkit.jar" />
+                <include name="svnkit-cli.jar" />
+            </fileset>
+        </copy>
     </target>
     <target name="test" depends="jar,compile-tests">
         <junit fork="true" newenvironment="true" failureproperty="tests.failed" 

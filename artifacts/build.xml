@@ -1,7 +1,9 @@
 <project name="Artifacts" basedir="." default="build">
 	<property name="build.root" location="${basedir}/.." />
 	<property name="externals.dir" location="${basedir}/../externals" />
-	<property name="artifacts.build.dir" location="${basedir}/build" />
+	<property name="artifacts.dir" location="${basedir}/build" />
+	<property name="artifacts.build.dir" location="${artifacts.dir}/3licenses" />
+	<property name="dist.dir" location="${build.root}/dist" />
 	<property name="3licenses-ant.dir" location="${build.root}/ant/build" />
 	<property name="3licenses-ant-doc.dir" location="${build.root}/ant/doc" />
 	<path id="3licenses-ant.classpath">
@@ -25,24 +27,28 @@
 		</collect-licenses>
 	</target>
 	<target name="gather-artifacts">
+		<delete dir="${artifacts.build.dir}" quiet="true" />
 		<mkdir dir="${artifacts.build.dir}" />
-		<delete>
-			<fileset dir="${artifacts.build.dir}" includes="**/*" />
-		</delete>
 		<copy todir="${artifacts.build.dir}" overwrite="true">
 			<fileset dir="${3licenses-ant.dir}" includes="*/**" />
 		</copy>
+		<copy tofile="${artifacts.build.dir}/license.html" file="epl-v10.html" overwrite="true" />
 		<antcall target="gather-licenses" />
 		<echo message="================ Done: ${artifacts.build.dir} ================" />
 	</target>
+	<target name="zip-artifacts">
+                <mkdir dir="${dist.dir}" />
+		<zip basedir="${artifacts.dir}" destfile="${dist.dir}/3licenses.zip" />
+        </target>
 	<target name="clean">
 		<tstamp>
 			<format property="top.clean.time" pattern="hh:mm:ss" />
 		</tstamp>
 		<echo message="================ ${top.clean.time}: Cleaning Up ================" />
 		<delete dir="${artifacts.build.dir}" quiet="true" />
+                <delete dir="${dist.dir}" quiet="true" />
 	</target>
-	<target name="build" depends="gather-artifacts" />
+	<target name="build" depends="gather-artifacts,zip-artifacts" />
 	<target name="clean-build" depends="clean, build" />
 	<target name="test">
 		<echo message="Project ${ant.project.name} doesn't have any tests" />
