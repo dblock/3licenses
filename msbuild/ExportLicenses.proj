@@ -1,0 +1,11 @@
+<Project DefaultTargets="export-licenses" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+  <UsingTask TaskName="AppSecInc.LicensesCollector.CollectLicenses" AssemblyFile="bin\Release\LicensesCollector.dll"/>
+
+  <!-- Usage Example-->  
+  <Target Name="gather-licenses">
+	<!--Clean the licenses folder-->
+    <!--RemoveDir Directories="export\licenses" /-->
+	
+	<!--CollectLicenses src="C:\TestLicenses\externals" todir="export\licenses" maxDepth = "3" /-->
+  </Target>
+</Project>

@@ -1,0 +1,25 @@
+<Project DefaultTargets="export-licenses" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  
+  <Import Project="ExportLicenses.proj"/>
+ 
+    <Target Name="configurations">
+        <CreateItem Include="$(Configuration)">
+            <Output TaskParameter="Include" ItemName="Configuration" />
+        </CreateItem>
+    </Target>
+	
+    <Target Name="all" DependsOnTargets="configurations" Inputs="@(Configuration)" Outputs="target\%(Configuration.FileName)">    
+        <CallTarget Targets="clean" />
+        <CallTarget Targets="build" />
+    </Target>
+	
+    <Target Name="clean" DependsOnTargets="configurations" Inputs="@(Configuration)" Outputs="target\%(Configuration.FileName)">
+        <Message Importance="high" Text="Cleaning project, %(Configuration.Identity) ..." />
+        <Exec Command="c:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe /p:Configuration=%(Configuration.Identity) /l:FileLogger,Microsoft.Build.Engine;logfile=MSBuild.log /tv:2.0 /t:Clean LicensesCollector.sln" />
+    </Target>
+    
+    <Target Name="build">
+		<MSBuild Projects="LicensesCollector.sln" Targets="Build" />
+    </Target>
+</Project>
