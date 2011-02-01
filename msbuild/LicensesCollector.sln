@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppSecInc.LicensesCollector", "src\AppSecInc.LicensesCollector\AppSecInc.LicensesCollector.csproj", "{BF31E718-93AA-4D65-99A4-A68FCE3017D4}"

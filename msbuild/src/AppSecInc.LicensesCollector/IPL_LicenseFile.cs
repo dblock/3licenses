@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace AppSecInc.LicensesCollector
 {
-    class LGPL_LicenseFile : ILicenseFile
+    class IPL_LicenseFile: ILicenseFile
     {
         #region ILicenseFile Members
 
@@ -16,17 +16,17 @@ namespace AppSecInc.LicensesCollector
 
         public bool IsMatch(string filename)
         {
-            return filename.Equals("lgpl.txt", StringComparison.CurrentCultureIgnoreCase);
+            return filename.Equals("IPLicense.txt", StringComparison.CurrentCultureIgnoreCase);
         }
 
         public string GetSpec(string filename)
         {
-            return "lgpl-v21";
+            return "ipl-v10";
         }
 
         public new string GetType()
         {
-            return "LGPL2.1";
+            return "IPL1.0";
         }
 
         #endregion

@@ -1,11 +1,22 @@
 <Project DefaultTargets="export-licenses" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
-  <UsingTask TaskName="AppSecInc.LicensesCollector.CollectLicenses" AssemblyFile="bin\Release\LicensesCollector.dll"/>
+  <UsingTask TaskName="AppSecInc.LicensesCollector.CollectLicenses" AssemblyFile="bin\Debug\LicensesCollector.dll"/>
+  <UsingTask TaskName="AppSecInc.LicensesCollector.CombineLicenses" AssemblyFile="bin\Debug\LicensesCollector.dll"/>
+
+  <ItemGroup> 
+    <ManifestDirs Include="export\licenses"/> 
+  </ItemGroup>
+  <ItemGroup>
+	<ExcludedProducts Include="nunit">
+	  <src>nunit</src>
+	  <include>false</include>
+	</ExcludedProducts>
+  </ItemGroup>
 
   <!-- Usage Example-->  
-  <Target Name="gather-licenses">
+  <Target Name="export-licenses">
 	<!--Clean the licenses folder-->
-    <!--RemoveDir Directories="export\licenses" /-->
-	
-	<!--CollectLicenses src="C:\TestLicenses\externals" todir="export\licenses" maxDepth = "3" /-->
+    <RemoveDir Directories="export\licenses" />
+	<CollectLicenses src="external" todir="export\licenses" maxDepth = "3" xslFile="manifest.xsl" excludedproducts="@(ExcludedProducts)" />
+	<CombineLicenses toDir="export\licenses\combined" xslFile="manifest.xsl" manifests="@(ManifestDirs)" />
   </Target>
 </Project>

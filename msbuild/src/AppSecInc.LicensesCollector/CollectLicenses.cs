@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 using System.IO;
 using SharpSvn;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace AppSecInc.LicensesCollector
 {
@@ -38,8 +39,16 @@ namespace AppSecInc.LicensesCollector
             set { _maxDepth = value; }
         }
 
+        private ExternalsDictionary _externals = new ExternalsDictionary();
+
+        private ITaskItem[] _excludedProducts;
+        public ITaskItem[] ExcludedProducts
+        {
+            get { return _excludedProducts; }
+            set { _excludedProducts = value; }
+        }
+
         private LicenseManager _manager = new LicenseManager();
-        private Externals _externals;
         private Folders _folders;
 
         private String _xslFile;
@@ -54,13 +63,11 @@ namespace AppSecInc.LicensesCollector
             if (_src == null)
             {
                 throw new Exception("license-files: missing 'src'");
-                return false;
             }
 
             if (_toDir == null)
             {
                 throw new Exception("license-files: missing 'toDir'");
-                return false;
             }
 
             if (_xslFile == null)
@@ -73,10 +80,23 @@ namespace AppSecInc.LicensesCollector
                 _xslFile = xslFile.FullName;
             }
 
+            foreach (ITaskItem excludedProduct in ExcludedProducts)
+            {
+                External ex = new External();
+                ex.Src = excludedProduct.GetMetadata("src");
+                ex.Name = excludedProduct.GetMetadata("name");
+                Boolean include;
+                Boolean.TryParse(excludedProduct.GetMetadata("include"), out include);
+                ex.Include = include;
+                ex.ParentProduct = excludedProduct.GetMetadata("parentproduct");
+                ex.License = excludedProduct.GetMetadata("license");
+                ex.Version = excludedProduct.GetMetadata("version");
+                _externals.AddConfiguredExternal(ex);
+            }
             Log.LogMessage(MessageImportance.Normal, "license-files: collecting license files in " + _src, null);
 
-            DirectoryInfo src = new DirectoryInfo(_src.ToString());
-            DirectoryInfo toDir = new DirectoryInfo(_toDir.ToString());
+            DirectoryInfo src = new DirectoryInfo(_src);
+            DirectoryInfo toDir = new DirectoryInfo(_toDir);
             if (!toDir.Exists)
                 toDir.Create();
 
@@ -169,78 +189,28 @@ namespace AppSecInc.LicensesCollector
             return licenses.Count > 0 ? licenses : null;
         }
 
-        private String getVersion(String p, String s)
-        {
-            s = s.Trim();
-            if (s.StartsWith("-r"))
-            {
-                s = s.Substring("-r".Length).Trim();
-                while (s.Length > 0 && Char.IsDigit(s[0]))
-                {
-                    s = s.Substring(1);
-                }
-            }
-
-            String version = "";
-            for (int i = 0; i < s.Length; i++)
-            {
-                char c = s[i];
-                if (Char.IsDigit(c))
-                {
-                    version += c;
-                }
-                else if (c == '.' && version.Length > 0)
-                {
-                    if (version.Length > 0 || Char.IsDigit(version[version.Length - 1]))
-                    {
-                        version += c;
-                    }
-                }
-                //if the license number is separated by (_)
-                else if (c == '_' && version.Length > 0)
-                {
-                    if (version.Length > 0 || Char.IsDigit(version[version.Length - 1]))
-                    {
-                        version += c;
-                    }
-                }
-            }
-
-            while (version.Length > 0 && version[version.Length - 1] == '.')
-            {
-                version = version.Substring(0, version.Length - 1);
-            }
-
-            version = version.Replace('_', '.');
-            return version.Length > 0 ? version : null;
-
-        }
-
         private SortedList<String, String> getExternalsVersions(DirectoryInfo src)
         {
             SortedList<String, String> externals = new SortedList<String, String>();
-            Log.LogMessage(MessageImportance.Normal, "fetching svn:externals for '", null);
+            Log.LogMessage(MessageImportance.Normal, "fetching svn:externals for '{0}'", new object[] { src });
 
             using (SvnClient svn = new SvnClient())
             {
                 String svnExternalsData;
                 svn.GetProperty(src.FullName, SvnPropertyNames.SvnExternals, out svnExternalsData);
-                Char[] separators = { '\n', '\r' };
-                String[] svnExternalsLineData = svnExternalsData.Split(separators);
-
-                foreach (String svnExternal in svnExternalsLineData)
+                Regex regexp = new Regex(@"^(\S+).*/((\d+[\._]?)+)$", RegexOptions.Multiline);
+                MatchCollection matches = regexp.Matches(svnExternalsData.Replace("\r\n","\n"));
+                foreach (Match match in matches)
                 {
-                    String[] parts = svnExternal.Split(new Char[] { ' ' }, 2);
-                    if (parts.Length == 2)
+                    String externalName = match.Groups[1].Value;
+                    String externalVersion = match.Groups[2].Value;
+                    if (!String.IsNullOrEmpty(externalVersion))
                     {
-                        String version = getVersion(parts[0], parts[1]);
-                        if (version != null)
-                            externals.Add(parts[0], version);
+                        externals.Add(externalName, externalVersion);
                     }
                 }
+                return externals;
             }
-
-            return externals;
         }
 
         private String getLicenseFilename(String filename)
@@ -261,7 +231,7 @@ namespace AppSecInc.LicensesCollector
             licenseInfo.LicenseFilename = licenseFound.LicenseFilename;
             licenseInfo.LicenseType = licenseFound.LicenseType;
             licenseInfo.Product = licenseFound.Product;
-            licenseInfo.SubProduct = licenseFound.SubProduct;
+            licenseInfo.ParentProduct = licenseFound.ParentProduct;
             licenseInfo.Version = licenseFound.Version;
 
             if (_externals != null)
@@ -270,7 +240,24 @@ namespace AppSecInc.LicensesCollector
                 _externals.TryGetValue(external, out externalDefinition);
                 if (externalDefinition != null)
                 {
-                    externalDefinition.Apply(licenseInfo);
+                    if (String.IsNullOrEmpty(licenseInfo.ParentProduct))
+                    {
+                        externalDefinition.Apply(licenseInfo);
+                    }
+                    else
+                    {
+                        externalDefinition.ApplyToSubProduct(licenseInfo);
+                    }
+                }
+                // subproduct external
+                if (!String.IsNullOrEmpty(licenseInfo.ParentProduct))
+                {
+                    External childExternalDefinition;
+                    _externals.TryGetValue(licenseInfo.Product, out childExternalDefinition);
+                    if (childExternalDefinition != null)
+                    {
+                        childExternalDefinition.Apply(licenseInfo);
+                    }
                 }
             }
 
@@ -279,7 +266,7 @@ namespace AppSecInc.LicensesCollector
                 foreach (Folder folder in _folders)
                 {
                     licenseInfo.Product = folder.Replace(licenseInfo.Product);
-                    licenseInfo.SubProduct = folder.Replace(licenseInfo.SubProduct);
+                    licenseInfo.ParentProduct = folder.Replace(licenseInfo.ParentProduct);
                     licenseInfo.LicenseFilename = folder.Replace(licenseInfo.LicenseFilename);
                 }
             }
@@ -300,7 +287,7 @@ namespace AppSecInc.LicensesCollector
             return external.Include;
         }
 
-        void AddConfiguredExternals(Externals set)
+        void AddConfiguredExternals(ExternalsDictionary set)
         {
             if (_externals != null)
             {
@@ -313,7 +300,7 @@ namespace AppSecInc.LicensesCollector
         {
             if (_folders != null)
             {
-                throw new Exception("Only one externals set allowed.");
+                throw new Exception("Only one folders set allowed.");
             }
             _folders = set;
         }

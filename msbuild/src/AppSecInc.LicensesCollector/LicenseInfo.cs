@@ -1,89 +1,36 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace AppSecInc.LicensesCollector
 {
-    class LicenseInfo : ILicense
+    public class LicenseInfo : ILicense
     {
         private String _product;
         public String Product
         {
-            get
-            {
-                return _product;
-            }
-            set
-            {
-                _product = value;
-            }
+            get { return _product; } 
+            set { if (value != null) _product = value.Replace('_', ' '); }
         }
-
-        private String _subProduct;
-        public String SubProduct
+        
+        private String _parentProduct;
+        public String ParentProduct
         {
-            get
-            {
-                return _subProduct;
-            }
-            set
-            {
-                _subProduct = value;
-            }
+            get { return _parentProduct; }
+            set { if (value != null) _parentProduct = value.Replace('_', ' '); }
         }
 
         private String _version;
         public String Version
         {
-            get
-            {
-                return _version;
-            }
-            set
-            {
-                _version = value;
-            }
+            get { return _version; }
+            set { if (value != null) _version = value.Replace('_', '.'); }
         }
 
-        private String _licenseFilename;
-        public String LicenseFilename
-        {
-            get
-            {
-                return _licenseFilename;
-            }
-            set
-            {
-                _licenseFilename = value;
-            }
-        }
-
-        private String _licenseType;
-        public String LicenseType
-        {
-            get
-            {
-                return _licenseType;
-            }
-            set
-            {
-                _licenseType = value;
-            }
-        }
-
-        private String _url;
-        public String Url
-        {
-            get
-            {
-                return _url;
-            }
-            set
-            {
-                _url = value;
-            }
-        }
+        public String LicenseFilename { get; set; }
+        public String LicenseType { get; set; }
+        public String Url { get; set; }
 
         public LicenseInfo()
         {
@@ -91,23 +38,25 @@ namespace AppSecInc.LicensesCollector
 
         public LicenseInfo(String product, String version)
         {
-            _product = product;
-            _version = version;
+            Product = product;
+            Version = version;
         }
 
         public String GetKey()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Product);
-            if (Product != null)
+            // parent product
+            if (!String.IsNullOrEmpty(ParentProduct))
             {
-                sb.Append("/" + SubProduct);
+                sb.Append(ParentProduct).Append("/");
             }
+            sb.Append(Product);
             if (Version != null)
             {
                 sb.Append("/" + Version);
             }
             return sb.ToString();
         }
+
     }
 }
