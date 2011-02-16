@@ -3,7 +3,9 @@
 	<target name="recurse">
 		<ant dir="version" target="${ant.target}" />
 		<ant dir="ant" target="${ant.target}" />
+		<ant dir="msbuild" target="${ant.target}" />
 		<ant dir="artifacts" target="${ant.target}" />
+		<ant dir="msbuild" target="${ant.target}" />
 	</target>
 	<target name="build">
 		<antcall target="recurse">

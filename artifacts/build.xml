@@ -19,6 +19,7 @@
 	<property name="artifacts.build.dir" location="${build.dir}/3licenses" />
 	<property name="dist.dir" location="${build.root}/dist" />
 	<property name="3licenses-ant.dir" location="${build.root}/ant/build" />
+	<property name="3licenses-msbuild.dir" location="${build.root}/msbuild/bin/Release" />
 	<property name="3licenses-ant-doc.dir" location="${build.root}/ant/doc" />
 	<path id="3licenses-ant.classpath">
 		<fileset dir="${3licenses-ant.dir}">
@@ -31,20 +32,27 @@
 	</path>
 	<target name="gather-licenses">
 		<taskdef resource="com/appsecinc/ant/3licenses.properties" classpathref="3licenses-ant.classpath" />
-		<collect-licenses src="${build.root}/externals" todir="${artifacts.build.dir}/licenses" xslfile="${3licenses-ant.dir}/manifest.xsl">
+		<collect-licenses src="${build.root}/externals" todir="${artifacts.build.dir}/licenses" xslfile="${3licenses-ant.dir}/manifest.xsl" maxdepth="3">
 			<externals>
 				<external src="junit" include="false" />
 				<external src="ant" name="Apache ANT" license="Apache License 2.0" url="http://ant.apache.org/" />
 				<external src="svnkit" name="Subversion Java Kit" license="TMate Open Source License" url="http://svnkit.com/" />
 				<external src="jna" name="Java Native Access" url="http://jna.dev.java.org/" />
+				<external src="sharpsvn" name="Subversion client API for .Net" url="http://sharpsvn.open.collab.net/" />
+				<external src="sharpsvn" name="Subversion client API for .Net" url="http://sharpsvn.open.collab.net/" />
 			</externals>
 		</collect-licenses>
 	</target>
 	<target name="gather-artifacts">
 		<delete dir="${artifacts.build.dir}" quiet="true" />
 		<mkdir dir="${artifacts.build.dir}" />
-		<copy todir="${artifacts.build.dir}" overwrite="true">
+		<mkdir dir="${artifacts.build.dir}/msbuild" />
+		<mkdir dir="${artifacts.build.dir}/ant" />
+		<copy todir="${artifacts.build.dir}/ant" overwrite="true">
 			<fileset dir="${3licenses-ant.dir}" includes="*/**" />
+		</copy>
+		<copy todir="${artifacts.build.dir}/msbuild" overwrite="true">
+			<fileset dir="${3licenses-msbuild.dir}" includes="*/**" />
 		</copy>
 		<copy tofile="${artifacts.build.dir}/license.html" file="epl-v10.html" overwrite="true" />
 		<copy tofile="${artifacts.build.dir}/whatsnew.html" file="whatsnew.html" overwrite="true">
