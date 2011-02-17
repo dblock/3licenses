@@ -39,7 +39,6 @@
 				<external src="svnkit" name="Subversion Java Kit" license="TMate Open Source License" url="http://svnkit.com/" />
 				<external src="jna" name="Java Native Access" url="http://jna.dev.java.org/" />
 				<external src="sharpsvn" name="Subversion client API for .Net" url="http://sharpsvn.open.collab.net/" />
-				<external src="sharpsvn" name="Subversion client API for .Net" url="http://sharpsvn.open.collab.net/" />
 			</externals>
 		</collect-licenses>
 	</target>
