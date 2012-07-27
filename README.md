@@ -12,6 +12,9 @@ Are you currently copying individual _license.txt_ files "by hand" or are you in
 
 3Licenses is pronounced "free licenses".
 
+* [Download 3Licenses 1.0](https://github.com/downloads/dblock/3licenses/3licenses-1.0.zip)
+* [Old CodePlex Home](http://3licenses.codeplex.com/)
+
 ## Features
 
 * Integrates with ANT and Subversion.
@@ -149,6 +152,10 @@ The above example is XSL-transformed XML output.
 This is partial HTML output from a large project that combines thirdparty libraries from various SVN trees.
 
 ![demo2.png](https://raw.github.com/dblock/3licenses/master/images/demo2.png)
+
+## License
+
+This project is licensed under the Eclipse Public License (EPL). See [LICENSE](https://raw.github.com/dblock/3licenses/master/LICENSE) for details.
 
 ## History
 
