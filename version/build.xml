@@ -14,16 +14,10 @@
 -->
 <project name="Version" basedir="." default="build">	
 	<dirname property="sourcetree.root" file="${basedir}" />	
-	<property name="svn.properties.file" location="${basedir}/svn-derived.properties" />
 
-	<!-- bootstrapping: update svn properties file before doing anything else -->
-	<ant antfile="svn-targets.xml" target="update-svn-properties-file" />
-	<property file="svn-derived.properties" />
-	
-	<import file="${basedir}/svn-targets.xml" />
 	<property name="build.dir" location="${basedir}/build" />
 
-	<!-- initialize a new build: run svn update, create root build directory -->
+	<!-- initialize a new build: create root build directory -->
 	<target name="init-new-build">
 		<tstamp>
 			<format property="top.build.time" pattern="hh:mm:ss" />
@@ -41,10 +35,6 @@
 
 	<target name="echo">
 		<echoproperties />
-	</target>
-
-	<target name="clean" depends="delete-svn-properties-file">
-		<delete dir="${build.dir}" />
 	</target>
 
 	<target name="build" depends="init-new-build">

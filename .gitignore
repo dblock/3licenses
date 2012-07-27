@@ -1,0 +1,11 @@
+ant/bin
+ant/build
+ant/doc
+ant/lib
+artifacts/build
+dist
+*.sln.cache
+msbuild/bin
+msbuild/src/AppSecInc.LicensesCollector/obj
+version/build.number
+version/build
