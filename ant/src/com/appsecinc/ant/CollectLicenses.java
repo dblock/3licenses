@@ -145,13 +145,26 @@ public class CollectLicenses extends Task {
 			String svnExternalsData = svnExternals.getValue().toString();
 			String[] svnExternalsLineData = svnExternalsData.split("[\\n\\r]");
 			for(String svnExternal : svnExternalsLineData) {
-				String[] parts = svnExternal.split("\\s", 2);
-				if (parts.length == 2) {
-					String version = getVersion(parts[1]);
-					if (version != null) {
-						System.out.println(parts[0] + ": " + version);
-						externals.put(parts[0], version);
-					}
+				if (svnExternal.isEmpty()) {
+					continue;
+				}
+				String[] parts = svnExternal.split("\\s");
+				
+				String url = null;
+				String path = null; 
+				if (parts[0].equals("-r")) {
+					String revision = parts[1];
+					url = parts[2];
+					path = parts[3];
+				}
+				else {
+					url = parts[0];
+					path = parts[1];
+				}
+				String version = getVersion(url);
+				if (version != null) {
+					System.out.println(path + ": " + version);
+					externals.put(path, version);
 				}
 			}
 		} catch (SVNException e) {
@@ -202,6 +215,7 @@ public class CollectLicenses extends Task {
 				} 
 
 				String version = externals.get(external);
+				
 				List<LicenseFound> licensesCollected = collect(external, external, 
 						external, version, new File(src, external), 1);				
 				if (licensesCollected != null) {
