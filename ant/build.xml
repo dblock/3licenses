@@ -27,9 +27,9 @@
         <fileset dir="${externals.dir}/ant/lib">
             <include name="ant.jar" />
         </fileset>
-        <fileset dir="${externals.dir}/svnkit">
-            <include name="svnkit.jar" />
-            <include name="svnkit-cli.jar" />
+        <fileset dir="${externals.dir}/svnkit/lib">
+            <include name="svnkit-1.7.5-v1.jar" />
+            <include name="svnkit-cli-1.7.5-v1.jar" />
         </fileset>
     </path>
     <path id="3licenses.classpath">       
@@ -86,9 +86,9 @@
         </jar>
     	<copy todir="${3licenses.build}" file="${3licenses.src}/manifest.xsl" />
         <copy todir="${3licenses.build}">
-            <fileset dir="${externals.dir}/svnkit">
-                <include name="svnkit.jar" />
-                <include name="svnkit-cli.jar" />
+            <fileset dir="${externals.dir}/svnkit/lib">
+                <include name="svnkit-1.7.5-v1" />
+                <include name="svnkit-cli-1.7.5-v1.jar" />
             </fileset>
         </copy>
     </target>

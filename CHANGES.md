@@ -1,5 +1,7 @@
 # Next Release
 
+* Upgraded SVNKit to 1.7.5-v1
+* Support for SVN 1.7 externals format.
 * First release off [Github](https://github.com/dblock/3licenses).
 
 # 1.0 (11/5/2010)

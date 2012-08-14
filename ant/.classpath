@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="/Externals/ant/lib/ant.jar"/>
-	<classpathentry kind="lib" path="/Externals/svnkit/svnkit.jar"/>
+	<classpathentry kind="lib" path="/Externals/svnkit/lib/svnkit-1.7.5-v1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
