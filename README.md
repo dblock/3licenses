@@ -104,7 +104,7 @@ You can exclude external directories from the generated manifest, useful for exc
 
 *Reference 3Licenses JARs*
 
-```
+``` xml
 <path id="3licenses.classpath">
  <fileset dir="${externals.dir}/3licenses">
   <include name="*.jar" />
@@ -114,13 +114,13 @@ You can exclude external directories from the generated manifest, useful for exc
 
 *Reference the 3Licenses JAR's ANT Tasks*
 
-```
+``` xml
  <taskdef resource="com/appsecinc/ant/3licenses.properties" classpathref="3licenses.classpath" />
 ```
 
 *Create a Target to Combine Licenses*
 
-```
+``` xml
  <target name="combine-licenses">
   <combine-licenses todir="${licenses.dir}/combined" xslfile="${externals.dir}/3licenses/manifest.xsl">
    <licenses srcdir="${project1.dir}/licenses" />
