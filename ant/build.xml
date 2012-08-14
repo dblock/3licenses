@@ -28,8 +28,7 @@
             <include name="ant.jar" />
         </fileset>
         <fileset dir="${externals.dir}/svnkit/lib">
-            <include name="svnkit-1.7.5-v1.jar" />
-            <include name="svnkit-cli-1.7.5-v1.jar" />
+            <include name="svnkit*.jar" />
         </fileset>
     </path>
     <path id="3licenses.classpath">       

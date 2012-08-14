@@ -26,8 +26,7 @@
 			<include name="3licenses.jar" />
 		</fileset>
 		<fileset dir="${externals.dir}/svnkit">
-			<include name="svnkit.jar" />
-			<include name="svnkit-cli.jar" />
+			<include name="svnkit*.jar" />
 		</fileset>
 	</path>
 	<target name="gather-licenses">
@@ -64,16 +63,16 @@
 		<echo message="================ Done: ${version} ================" />
 	</target>
 	<target name="zip-artifacts">
-        <mkdir dir="${dist.dir}" />
+    <mkdir dir="${dist.dir}" />
 		<zip basedir="${build.dir}" destfile="${dist.dir}/3licenses-${version.major.minor}.zip" />
-        </target>
+  </target>
 	<target name="clean">
 		<tstamp>
 			<format property="top.clean.time" pattern="hh:mm:ss" />
 		</tstamp>
 		<echo message="================ ${top.clean.time}: Cleaning Up ================" />
 		<delete dir="${build.dir}" quiet="true" />
-                <delete dir="${dist.dir}" quiet="true" />
+    <delete dir="${dist.dir}" quiet="true" />
 	</target>
 	<target name="build" depends="gather-artifacts" />
 	<target name="clean-build" depends="clean, build" />
