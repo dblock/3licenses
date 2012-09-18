@@ -25,8 +25,8 @@
 		<fileset dir="${3licenses-ant.dir}">
 			<include name="3licenses.jar" />
 		</fileset>
-		<fileset dir="${externals.dir}/svnkit">
-			<include name="svnkit*.jar" />
+		<fileset dir="${externals.dir}/svnkit/lib">
+			<include name="*.jar" />
 		</fileset>
 	</path>
 	<target name="gather-licenses">
