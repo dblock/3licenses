@@ -12,7 +12,7 @@ Are you currently copying individual _license.txt_ files "by hand" or are you in
 
 3Licenses is pronounced "free licenses".
 
-* [Download 3Licenses 1.0](https://github.com/downloads/dblock/3licenses/3licenses-1.0.zip)
+* [Download 3Licenses 1.0](http://code.dblock.org/downloads/3licenses/3licenses-1.0.zip)
 * [Old CodePlex Home](http://3licenses.codeplex.com/)
 
 ## Features
